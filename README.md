@@ -300,3 +300,25 @@ This mock provides some methods to set up the values that the signer should retu
 - `denyTransaction(from, to, iface, id, inputs, msg)`. Same conditions of `allowTransaction` but in this case the transaction will be reverted with `msg` message.
 
 All the data you set in the signer will be used until the `clear` function is called.
+
+
+### - Potential Exploiters Detector Handler
+
+This approach detects transactions when an address funded from Tornado Cash deploys a contract that contains suspicious hex strings. You need to provide the signature of the event, a list of Tornado Cash addresses and a list of suspicious hex strings. 
+
+#### How to use it
+```ts
+import { providePotentialExploiterHandler } from "forta-agent-tools";
+
+const handler = providePotentialExploiterHandler (findingGenerator, tornadoAddressesList, eventSignature, suspiciousHexStrings);
+```
+
+#### Arguments
+
+- `findingGenerator`: The purpose of this argument was explained in the "General Types" section. The function provided as an argument will receive a `metadataVault` with the keys:
+  - `from`: The account calling the transfer.
+  - `contractAddress`: The address of the contract deployed by the tornado funded address.
+- `tornadoAddressesList`: The list of Tornado cash addresses involved in the transaction.
+- `eventSignature`:  The event signature to be detected.
+- `suspiciousHexStrings`: The list of suspicious hex strings to be searched in deployed contract code.
+
